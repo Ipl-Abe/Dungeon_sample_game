@@ -9,7 +9,7 @@ public class Pinky_walk : MonoBehaviour
     // 速度
 	public Vector2 SPEED = new Vector2(0.05f, 0.05f);
     // Start is called before the first frame update
-    //float Yspeed;
+    float Yspeed;
 
 
     // 目的地に着いたかどうか
@@ -48,11 +48,13 @@ public class Pinky_walk : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //Debug.Log("Collision");
+        // start, end, color, duration, depthTest
         // if(seconds >=60f){
         //     minute++;
         //     seconds = seconds -60;
         // }
+
         decideTargetPotision();
  
         // 現在地から目的地までSPEEDの速度で移動する
@@ -61,46 +63,65 @@ public class Pinky_walk : MonoBehaviour
         if(transform.position == targetPosition){
             isReachTargetPosition = true;
         }
-        //Move();
+       // Move();
     }
-    	// 移動関数
-	void Move(){
-		// 現在位置をPositionに代入
-		// Vector2 Position = transform.position;
-        // Yspeed = SPEED.y;
-
-        // if(Input.GetKey(KeyCode.S)){
-        //     Yspeed = 0;
-        //     animator.SetBool("IsRunning", false);
-        // }
-        // else{
-        //     animator.SetBool("IsRunning", true);
-        // }
-		// Position.y -= Yspeed;
-		// transform.position = Position;
-	}
+    void OnCollisionEnter2D(Collision2D other){
+        Debug.Log("Collision");
+        if(other.gameObject.tag == "Walls"){
+            //Time.timeScale = 0f;
+            //targetPosition = new Vector3(Random.Range(X_MIN_MOVE_RANGE, X_MAX_MOVE_RANGE), Random.Range(Y_MIN_MOVE_RANGE, Y_MAX_MOVE_RANGE), 0);
+            isReachTargetPosition = true;
+            //targetPosition = transform.position;
+        }
+    }
+    //	// 移動関数
+	//void Move(){
+	//	//現在位置をPositionに代入
+	//	Vector2 Position = transform.position;
+    //    Yspeed = SPEED.y;
+    //    if(Input.GetKey(KeyCode.S)){
+    //        Yspeed = 0;
+    //        animator.SetBool("IsRunning", false);
+    //    }
+    //    else{
+    //        animator.SetBool("IsRunning", true);
+    //    }
+	//	Position.y -= Yspeed;
+	//	transform.position = Position;
+	//}
 
     // 目的地を設定する
     private void decideTargetPotision(){
         // まだ目的地についてなかったら（移動中なら）目的地を変えない
-        if(!isReachTargetPosition){
-            return;
-        }
+        //seconds += Time.deltaTime;
+        //if(seconds < 20f) {
+          //   Debug.DrawLine(transform.position, targetPosition, Color.white, 2.5f);
+            if(!isReachTargetPosition ){
+                return;
+            }
+        //}
 
+        //seconds = 0f;
         animator.SetBool("IsRunning", false);
         seconds += Time.deltaTime;
+        targetPosition = new Vector3(transform.position.x, transform.position.y, 0);
         // if(seconds > 3){
         //     seconds = 0f; 
         // }
-
-        if(seconds > 10f){
+        Debug.Log(seconds);
+        if(seconds > 4f){
         // 目的地に着いていたら目的地を再設定する
-        targetPosition = new Vector3(Random.Range(X_MIN_MOVE_RANGE, X_MAX_MOVE_RANGE), Random.Range(Y_MIN_MOVE_RANGE, Y_MAX_MOVE_RANGE), 0);
-        isReachTargetPosition = false;
-        animator.SetBool("IsRunning", true);
+            targetPosition = new Vector3(Random.Range(X_MIN_MOVE_RANGE, X_MAX_MOVE_RANGE), Random.Range(Y_MIN_MOVE_RANGE, Y_MAX_MOVE_RANGE), 0);
+            isReachTargetPosition = false;
+            animator.SetBool("IsRunning", true);
+            seconds = 0f;
         }
     }
 
 }
+
+// TODO : targetPositionを更新するだけの関数を準備
+// ディテイ等はその関数の外側で行う．
+
 
 
